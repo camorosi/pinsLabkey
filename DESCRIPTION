@@ -12,4 +12,11 @@ RoxygenNote: 7.2.3
 Imports: 
     magrittr,
     pins (>= 1.2.0),
-    Rlabkey
+    Rlabkey,
+    purrr (>= 1.0.0),
+    fs,
+    ellipsis
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

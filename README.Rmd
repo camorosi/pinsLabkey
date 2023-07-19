@@ -26,15 +26,6 @@ The goal of pinsLabkey is to provide a wrapper around pins to interface with Lab
 You can install the development version of pinsLabkey like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
-```
-
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(pinsLabkey)
-## basic example code
+remotes::install_github(repo = "camorosi/pinsLabkey")
 ```
 

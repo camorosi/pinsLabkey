@@ -1,0 +1,40 @@
+---
+title: "pinsLabkey"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{pinsLabkey}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(pinsLabkey)
+
+# easiest if alias is provided
+board_obj <- board_labkey(board_alias = "pins-test", # becomes 'labkey-pins-test in cache
+                          base_url = "https://learn.labkey.com/",
+                          folder = "LabKey_Board/",
+                          subdir = "pins")
+
+# can also not provide alias
+# board_obj <- board_labkey(base_url = "https://learn.labkey.com/",
+#                           folder = "LabKey_Board/",
+#                           subdir = "pins")
+board_obj %>% pin_write(mtcars, "mtcars") # force identical write is not working
+board_obj %>% pin_read("mtcars")
+board_obj %>% pin_list()
+board_obj %>% pin_versions(name = "mtcars")
+board_obj %>% pin_version_delete(name = "mtcars", version = "20230719T211208Z-76dea")
+board_obj %>% pin_versions(name = "mtcars")
+board_obj %>% pin_read(name = "mtcars", hash = "76dea")
+board_obj %>% pin_delete(name = "mtcars")
+```
+
+

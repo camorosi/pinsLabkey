@@ -2,6 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom magrittr %>%
+#' @importFrom pins pin_read
+#' @importFrom pins pin_write
 ## usethis namespace: end
 NULL

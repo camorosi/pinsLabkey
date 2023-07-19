@@ -23,7 +23,7 @@ board_labkey <- function(
     api_key = Sys.getenv("LABKEY_API_KEY"),
     cache = NULL
 ) {
-  check_installed("Rlabkey")
+  # check_installed("Rlabkey")
 
   if (nchar(api_key) == 0) {
     stop("The 'labkey' board requires a 'api_key' parameter.")
@@ -46,7 +46,14 @@ board_labkey <- function(
     Rlabkey::labkey.webdav.mkDir(folderPath = folder, remoteFilePath = subdir)
   }
 
-  cache <- cache %||% board_cache_path(paste0("labkey-", board_alias))
+  # Use cache if provided, otherwise use alias or folder name
+  if (is.null(cache) & is.null(board_alias)) {
+    folder_cleaned <- gsub(pattern = "^-|-$", "", gsub(pattern = "/", replacement = "-", x = folder))
+    cache <- pins::board_cache_path(paste0("labkey-", folder_cleaned))
+  }
+  else if (is.null(cache) & !is.null(board_alias)) {
+    cache <- pins::board_cache_path(paste0("labkey-", board_alias))
+  }
   pins:::new_board_v1("pins_board_labkey",
                name = "labkey",
                base_url = base_url,
@@ -59,6 +66,7 @@ board_labkey <- function(
 }
 
 #' @importFrom pins pin_list
+#' @importFrom purrr map_chr
 #' @export
 pin_list.pins_board_labkey <- function(board, ...) {
   resp <- labkey.webdav.listDir(
@@ -69,7 +77,7 @@ pin_list.pins_board_labkey <- function(board, ...) {
   )
   final_list <- resp$files
 
-  paths <- fs::path_file(map_chr(final_list, ~ .$id))
+  paths <- fs::path_file(purrr::map_chr(final_list, ~ .$id))
   paths
 }
 
@@ -126,7 +134,7 @@ pin_versions.pins_board_labkey <- function(board, name, ...) {
   final_list <- resp$files
 
   paths <- fs::path_file(map_chr(final_list, ~ .$id))
-  version_from_path(paths)
+  pins:::version_from_path(paths)
 }
 
 
@@ -155,8 +163,8 @@ pin_meta.pins_board_labkey <- function(board, name, version = NULL, ...) {
     remoteFilePath = fs::path(board$subdir, metadata_key),
     localFilePath = fs::path(board$cache, metadata_key)
   )
-  pins::local_meta(
-    read_meta(fs::path(board$cache, name, version)),
+  pins:::local_meta(
+    pins:::read_meta(fs::path(board$cache, name, version)),
     name = name,
     dir = path_version,
     version = version
@@ -189,7 +197,7 @@ pin_store.pins_board_labkey <- function(board, name, paths, metadata,
   ellipsis::check_dots_used()
   pins:::check_pin_name(name)
   # version name is timestamp + first 5 chr of hash
-  version <- pins:::version_setup(board, name, version_name(metadata), versioned = versioned)
+  version <- pins:::version_setup(board, name, pins:::version_name(metadata), versioned = versioned)
 
   version_dir <- fs::path(name, version)
   # write data.txt to tmp file
@@ -210,11 +218,3 @@ pin_store.pins_board_labkey <- function(board, name, paths, metadata,
   name
 }
 
-
-
-## ' @rdname required_pkgs.pins_board
-## ' @export
-# required_pkgs.pins_board_labkey <- function(x, ...) {
-#   ellipsis::check_dots_empty()
-#   "Rlabkey"
-# }
