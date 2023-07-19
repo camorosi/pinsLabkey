@@ -1,0 +1,15 @@
+Package: pinsLabkey
+Title: Extends Pins for Labkey Boards
+Version: 0.0.0.9000
+Authors@R: 
+    person("Clara", "Amorosi", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-0730-2576"))
+Description: Package to extend R pins for LabKey boards
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: 
+    magrittr,
+    pins (>= 1.2.0),
+    Rlabkey
