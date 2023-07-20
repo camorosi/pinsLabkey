@@ -23,11 +23,10 @@ board_labkey <- function(
     api_key = Sys.getenv("LABKEY_API_KEY"),
     cache = NULL
 ) {
-  # check_installed("Rlabkey")
 
-  if (nchar(api_key) == 0) {
-    stop("The 'labkey' board requires a 'api_key' parameter.")
-  }
+  # if (nchar(api_key) == 0) {
+  #   stop("The 'labkey' board requires a 'api_key' parameter.")
+  # }
   if (nchar(base_url) == 0) {
     stop("The 'labkey' board requires a 'base_url' parameter for the LabKey server.")
   }
@@ -37,7 +36,6 @@ board_labkey <- function(
 
   # Globally sets the api_key and base_url
   Rlabkey::labkey.setDefaults(apiKey = api_key, baseUrl = base_url)
-  # Rlabkey::labkey.acceptSelfSignedCerts()
 
   dirExists <- Rlabkey::labkey.webdav.pathExists(folderPath = folder, remoteFilePath = subdir)
 
@@ -69,7 +67,7 @@ board_labkey <- function(
 #' @importFrom purrr map_chr
 #' @export
 pin_list.pins_board_labkey <- function(board, ...) {
-  resp <- labkey.webdav.listDir(
+  resp <- Rlabkey::labkey.webdav.listDir(
     baseUrl = board$base_url,
     folderPath = board$folder,
     remoteFilePath = board$subdir,

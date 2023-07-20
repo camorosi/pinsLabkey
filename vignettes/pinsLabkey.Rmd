@@ -14,27 +14,59 @@ knitr::opts_chunk$set(
 )
 ```
 
+The pinsLabkey package provides a wrapper around [pins](https://pins.rstudio.com/) to use pins on a [LabKey](https://www.labkey.com/) board, using the [Rlabkey](https://github.com/LabKey/labkey-api-r) package. 
+
+## Usage
+
+To read or write a pin from a LabKey board, you must first create a board object. Provide the folder and folder subdirectory on the LabKey board to use. If not specified, the folder subdirectory "pins" will be used. 
+
+Notes on credentials. If you are reading/writing to a non-public board, you may need to provide credentials too access pins on a LabKey board. Provide a LabKey api key using the environment variable `LABKEY_API_KEY`.
+
 ```{r setup}
 library(pinsLabkey)
+# library(Rlabkey)
 
 # easiest if alias is provided
-board_obj <- board_labkey(board_alias = "pins-test", # becomes 'labkey-pins-test in cache
-                          base_url = "https://learn.labkey.com/",
-                          folder = "LabKey_Board/",
-                          subdir = "pins")
+board <- board_labkey(board_alias = "pins-test", # becomes 'labkey-pins-test in cache
+                      base_url = "https://learn.labkey.com/",
+                      folder = "LabKey_Board/",
+                      subdir = "pins")
+```
 
-# can also not provide alias
-# board_obj <- board_labkey(base_url = "https://learn.labkey.com/",
-#                           folder = "LabKey_Board/",
-#                           subdir = "pins")
-board_obj %>% pin_write(mtcars, "mtcars") # force identical write is not working
-board_obj %>% pin_read("mtcars")
-board_obj %>% pin_list()
-board_obj %>% pin_versions(name = "mtcars")
-board_obj %>% pin_version_delete(name = "mtcars", version = "20230719T211208Z-76dea")
-board_obj %>% pin_versions(name = "mtcars")
-board_obj %>% pin_read(name = "mtcars", hash = "76dea")
-board_obj %>% pin_delete(name = "mtcars")
+Pin data to a LabKey board using pin_write(): 
+
+```{r}
+board %>% pin_write(mtcars, "mtcars")
+```
+
+And retrieve pinned data from a LabKey board with pin_read(): 
+
+```{r}
+board %>% pin_read("mtcars")
+```
+
+You can also list the available pins on the LabKey board and pin versions: 
+
+```{r}
+board %>% pin_list()
+board %>% pin_versions(name = "mtcars")
+```
+
+If there are multiple versions of the same pin, these can be retrieved by version or hash. 
+
+```{r}
+board %>% pin_write(head(mtcars), "mtcars")
+board %>% pin_versions(name = "mtcars")
+board %>% pin_read("mtcars", hash = "a800d")
 ```
 
 
+Pins can be deleted by name (all versions deleted) or by version. 
+
+```{r}
+versions <- pin_versions(board, name = "mtcars")
+board %>% pin_version_delete(name = "mtcars", version = versions$version[1])
+board %>% pin_versions(name = "mtcars")
+board %>% pin_delete(name = "mtcars")
+board %>% pin_list()
+```
