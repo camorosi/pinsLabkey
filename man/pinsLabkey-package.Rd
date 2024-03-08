@@ -6,10 +6,10 @@
 \alias{pinsLabkey-package}
 \title{pinsLabkey: Extends Pins for Labkey Boards}
 \description{
-Package to extend R pins for LabKey boards
+Package to extend R pins for LabKey boards. Wrapper around pins package to allow reading, writing and more of pins on LabKey servers.
 }
 \author{
-\strong{Maintainer}: Clara Amorosi (\href{https://orcid.org/0000-0002-0730-2576}{ORCID})
+\strong{Maintainer}: Clara Amorosi \email{clara.amorosi@bms.com} (\href{https://orcid.org/0000-0002-0730-2576}{ORCID})
 
 }
 \keyword{internal}

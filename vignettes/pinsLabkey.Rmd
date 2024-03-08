@@ -22,34 +22,29 @@ To read or write a pin from a LabKey board, you must first create a board object
 
 Notes on credentials. If you are reading/writing to a non-public board, you may need to provide credentials too access pins on a LabKey board. Provide a LabKey api key using the environment variable `LABKEY_API_KEY`.
 
-```{r setup}
+```{r}
 library(pinsLabkey)
-# library(Rlabkey)
 
 # easiest if alias is provided
-board <- board_labkey(board_alias = "pins-test", # becomes 'labkey-pins-test in cache
-                      base_url = "https://learn.labkey.com/",
-                      folder = "LabKey_Board/",
-                      subdir = "pins")
+board <- board_labkey(
+  board_alias = "pins-test", # becomes 'labkey-pins-test in cache
+  base_url = "https://learn.labkey.com/",
+  folder = "LabKey_Board/",
+  subdir = "pins"
+)
 ```
 
 Pin data to a LabKey board using pin_write(): 
 
 ```{r}
-board %>% pin_write(mtcars, "mtcars")
+board %>% pins::pin_write(mtcars, "mtcars")
+# messages are printing on the same line
 ```
 
 And retrieve pinned data from a LabKey board with pin_read(): 
 
 ```{r}
 board %>% pin_read("mtcars")
-```
-
-You can also list the available pins on the LabKey board and pin versions: 
-
-```{r}
-board %>% pin_list()
-board %>% pin_versions(name = "mtcars")
 ```
 
 If there are multiple versions of the same pin, these can be retrieved by version or hash. 
@@ -60,6 +55,11 @@ board %>% pin_versions(name = "mtcars")
 board %>% pin_read("mtcars", hash = "a800d")
 ```
 
+You can also list the available pins on the LabKey board:
+
+```{r}
+board %>% pin_list()
+```
 
 Pins can be deleted by name (all versions deleted) or by version. 
 
@@ -67,6 +67,7 @@ Pins can be deleted by name (all versions deleted) or by version.
 versions <- pin_versions(board, name = "mtcars")
 board %>% pin_version_delete(name = "mtcars", version = versions$version[1])
 board %>% pin_versions(name = "mtcars")
+# board %>% pin_read(name = "mtcars") # this is erroring out
 board %>% pin_delete(name = "mtcars")
 board %>% pin_list()
 ```

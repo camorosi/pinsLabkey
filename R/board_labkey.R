@@ -4,9 +4,13 @@
 #'
 #' `board_labkey()` is powered by the Rlabkey package <https://github.com/cran/Rlabkey>
 #'
+#' @param board_alias alias of the board to be used for cache storage
 #' @param base_url Url of Labkey server
 #' @param folder Folder within this server that this board will occupy
+#' @param subdir Subdirectory on LabKey server where pin should be stored (default "pins")
+#' @param versioned T or F whether to version the pin (default T)
 #' @param api_key API key to use for LabKey authentication. If not specified, will use `LABKEY_API_KEY`
+#' @param cache where to store board cache (default NULL will use default pins cache location)
 #' @export
 #' @examples
 #' \dontrun{
@@ -21,9 +25,8 @@ board_labkey <- function(
     subdir = "pins",
     versioned = TRUE,
     api_key = Sys.getenv("LABKEY_API_KEY"),
-    cache = NULL
-) {
-
+    cache = NULL) {
+  # nonrestricted boards may not require a key
   # if (nchar(api_key) == 0) {
   #   stop("The 'labkey' board requires a 'api_key' parameter.")
   # }
@@ -48,18 +51,18 @@ board_labkey <- function(
   if (is.null(cache) & is.null(board_alias)) {
     folder_cleaned <- gsub(pattern = "^-|-$", "", gsub(pattern = "/", replacement = "-", x = folder))
     cache <- pins::board_cache_path(paste0("labkey-", folder_cleaned))
-  }
-  else if (is.null(cache) & !is.null(board_alias)) {
+  } else if (is.null(cache) & !is.null(board_alias)) {
     cache <- pins::board_cache_path(paste0("labkey-", board_alias))
   }
-  pins:::new_board_v1("pins_board_labkey",
-               name = "labkey",
-               base_url = base_url,
-               folder = folder,
-               subdir = subdir,
-               api_key = api_key,
-               cache = cache,
-               versioned = versioned
+  pins:::new_board_v1(
+    board = "pins_board_labkey",
+    name = "labkey",
+    base_url = base_url,
+    folder = folder,
+    subdir = subdir,
+    api_key = api_key,
+    cache = cache,
+    versioned = versioned
   )
 }
 
@@ -71,7 +74,7 @@ pin_list.pins_board_labkey <- function(board, ...) {
     baseUrl = board$base_url,
     folderPath = board$folder,
     remoteFilePath = board$subdir,
-    fileSet='@files'
+    fileSet = "@files"
   )
   final_list <- resp$files
 
@@ -98,7 +101,7 @@ pin_delete.pins_board_labkey <- function(board, names, ...) {
       baseUrl = board$base_url,
       folderPath = board$folder,
       remoteFilePath = fs::path(board$subdir, name),
-      fileSet='@files'
+      fileSet = "@files"
     )
   }
   invisible(board)
@@ -112,7 +115,7 @@ pin_version_delete.pins_board_labkey <- function(board, name, version, ...) {
     baseUrl = board$base_url,
     folderPath = board$folder,
     remoteFilePath = fs::path(board$subdir, name, version),
-    fileSet='@files'
+    fileSet = "@files"
   )
 }
 
@@ -126,7 +129,7 @@ pin_versions.pins_board_labkey <- function(board, name, ...) {
     baseUrl = board$base_url,
     folderPath = board$folder,
     remoteFilePath = fs::path(board$subdir, name),
-    fileSet='@files'
+    fileSet = "@files"
   )
 
   final_list <- resp$files
@@ -202,17 +205,38 @@ pin_store.pins_board_labkey <- function(board, name, paths, metadata,
   yaml_path <- fs::path_temp("data.txt")
   yaml::write_yaml(x = metadata, file = yaml_path)
   withr::defer(fs::file_delete(yaml_path))
-  Rlabkey::labkey.webdav.put(localFile = yaml_path,
-                             baseUrl = board$base_url,
-                             folderPath = board$folder,
-                             remoteFilePath = fs::path(board$subdir, version_dir, "data.txt"))
+  Rlabkey::labkey.webdav.put(
+    localFile = yaml_path,
+    baseUrl = board$base_url,
+    folderPath = board$folder,
+    remoteFilePath = fs::path(board$subdir, version_dir, "data.txt")
+  )
   for (path in paths) {
-    Rlabkey::labkey.webdav.put(localFile = path,
-                               baseUrl = board$base_url,
-                               folderPath = board$folder,
-                               remoteFilePath = fs::path(board$subdir, version_dir, fs::path_file(path)))
+    Rlabkey::labkey.webdav.put(
+      localFile = path,
+      baseUrl = board$base_url,
+      folderPath = board$folder,
+      remoteFilePath = fs::path(board$subdir, version_dir, fs::path_file(path))
+    )
   }
 
   name
 }
 
+#' @export
+pins::pin_read
+
+#' @export
+pins::pin_write
+
+#' @export
+pins::pin_versions
+
+#' @export
+pins::pin_list
+
+#' @export
+pins::pin_version_delete
+
+#' @export
+pins::pin_delete

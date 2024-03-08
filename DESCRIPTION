@@ -3,8 +3,9 @@ Title: Extends Pins for Labkey Boards
 Version: 0.0.0.9000
 Authors@R: 
     person("Clara", "Amorosi", role = c("aut", "cre"),
+           email = "clara.amorosi@bms.com",
            comment = c(ORCID = "0000-0002-0730-2576"))
-Description: Package to extend R pins for LabKey boards
+Description: Package to extend R pins for LabKey boards. Wrapper around pins package to allow reading, writing and more of pins on LabKey servers.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -18,5 +19,8 @@ Imports:
     ellipsis
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0),
+    withr
 VignetteBuilder: knitr
+Config/testthat/edition: 3
