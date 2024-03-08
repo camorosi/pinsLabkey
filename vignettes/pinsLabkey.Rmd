@@ -20,12 +20,12 @@ The pinsLabkey package provides a wrapper around [pins](https://pins.rstudio.com
 
 To read or write a pin from a LabKey board, you must first create a board object. Provide the folder and folder subdirectory on the LabKey board to use. If not specified, the folder subdirectory "pins" will be used. 
 
-Notes on credentials. If you are reading/writing to a non-public board, you may need to provide credentials too access pins on a LabKey board. Provide a LabKey api key using the environment variable `LABKEY_API_KEY`.
+Notes on credentials: If you are reading/writing to a non-public board, you may need to provide credentials to access pins on a LabKey board. Provide a LabKey api key using the environment variable `LABKEY_API_KEY`.
 
 ```{r}
 library(pinsLabkey)
 
-# easiest if alias is provided
+# create a board object
 board <- board_labkey(
   board_alias = "pins-test", # becomes 'labkey-pins-test in cache
   base_url = "https://learn.labkey.com/",
@@ -34,14 +34,13 @@ board <- board_labkey(
 )
 ```
 
-Pin data to a LabKey board using pin_write(): 
+Pin data to a LabKey board using `pin_write()`: 
 
 ```{r}
 board %>% pins::pin_write(mtcars, "mtcars")
-# messages are printing on the same line
 ```
 
-And retrieve pinned data from a LabKey board with pin_read(): 
+And retrieve pinned data from a LabKey board with `pin_read()`: 
 
 ```{r}
 board %>% pin_read("mtcars")
