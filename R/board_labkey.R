@@ -66,6 +66,11 @@ board_labkey <- function(
   )
 }
 
+
+# required_pkgs.pins_board_labkey <- function(x, ...) {
+#   "Rlabkey"
+# }
+
 #' @importFrom pins pin_list
 #' @importFrom purrr map_chr
 #' @export
@@ -146,6 +151,7 @@ pin_meta.pins_board_labkey <- function(board, name, version = NULL, ...) {
   version <- pins:::check_pin_version(board, name, version)
   metadata_key <- fs::path(name, version, "data.txt")
 
+  # this should be helpful but not necessary
   key_exists <- Rlabkey::labkey.webdav.pathExists(
     baseUrl = board$base_url,
     folderPath = board$folder,
@@ -176,7 +182,8 @@ pin_meta.pins_board_labkey <- function(board, name, version = NULL, ...) {
 #' @export
 pin_fetch.pins_board_labkey <- function(board, name, version = NULL, ...) {
   meta <- pins::pin_meta(board, name, version = version)
-  pins:::cache_touch(board, meta)
+  pins:::cache_touch(board, meta) ## TODO this changes to read only!
+  fs::file_chmod(fs::path(meta$local$dir, "data.txt"), "u+w")
 
   for (file in meta$file) {
     key <- fs::path(name, meta$local$version, file)

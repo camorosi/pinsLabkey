@@ -16,7 +16,8 @@ Imports:
     Rlabkey,
     purrr (>= 1.0.0),
     fs,
-    ellipsis
+    ellipsis,
+    yaml
 Suggests: 
     knitr,
     rmarkdown,

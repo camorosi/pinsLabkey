@@ -41,6 +41,8 @@ test_that("Write pin with new hash", {
 
   # get pin versions to check
   pin_versions <- board %>% pin_versions(name = "mtcars")
+  # board %>% pin_meta("mtcars", version = pin_versions$version[1])
+  # board %>% pin_meta("mtcars", version = pin_versions$version[2])
   expect_s3_class(pin_versions, "data.frame")
   expect_equal(colnames(pin_versions), c("version", "created", "hash"))
   expect_equal(nrow(pin_versions), 2)
@@ -55,7 +57,6 @@ test_that("Read latest pin", {
   expect_equal(latest_pin, mtcars[1:10,])
 })
 
-# TODO this is erroring
 test_that("Read latest pin by hash", {
   board <- board_labkey_test()
 
@@ -73,14 +74,13 @@ test_that("Read pin by version", {
   expect_equal(first_pin, mtcars)
 })
 
-# TODO this is erroring
 test_that("Read latest pin by version", {
   board <- board_labkey_test()
 
   pin_versions <- board %>% pin_versions(name = "mtcars")
 
   latest_pin <- board %>% pin_read(name = "mtcars", version = pin_versions$version[2])
-  expect_equal(first_pin, mtcars[1:10,])
+  expect_equal(latest_pin, mtcars[1:10,])
 })
 
 test_that("List available pins", {
