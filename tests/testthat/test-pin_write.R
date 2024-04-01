@@ -1,5 +1,7 @@
 # Helper board function
 board_labkey_test <- function() {
+  # uses LABKEY_API_KEY env var
+
   board_labkey(
     board_alias = "pins-test", # becomes 'labkey-pins-test in cache
     base_url = "https://learn.labkey.com/",
@@ -9,11 +11,10 @@ board_labkey_test <- function() {
 }
 
 test_that("Write a pin on a labkey board", {
-  # withr::local_envvar(c("LABKEY_API_KEY" = Sys.getenv("LABKEY_API_KEY")))
 
   board <- board_labkey_test()
 
-  # this is returning messages even though pins.quiet
+  # this is returning messages even though pins.quiet is TRUE
   resp <- board %>% pin_write(mtcars, "mtcars", type = "rds")
   expect_equal(resp, "mtcars")
 })
@@ -41,8 +42,6 @@ test_that("Write pin with new hash", {
 
   # get pin versions to check
   pin_versions <- board %>% pin_versions(name = "mtcars")
-  # board %>% pin_meta("mtcars", version = pin_versions$version[1])
-  # board %>% pin_meta("mtcars", version = pin_versions$version[2])
   expect_s3_class(pin_versions, "data.frame")
   expect_equal(colnames(pin_versions), c("version", "created", "hash"))
   expect_equal(nrow(pin_versions), 2)
@@ -98,6 +97,20 @@ test_that("Try to delete pin that doesn't exits", {
                regexp = "Can't find pin called")
 })
 
+test_that("Delete pin version", {
+  board <- board_labkey_test()
+
+  pin_versions <- board %>% pin_versions(name = "mtcars")
+  version_to_delete <- pin_versions$version[1]
+
+  # note pin delete does not delete from the cache
+  board %>% pin_version_delete(name = "mtcars", version = version_to_delete)
+
+  pin_versions_after <- board %>% pin_versions(name = "mtcars")
+
+  expect_false(version_to_delete %in% pin_versions_after$version)
+})
+
 test_that("Delete pin", {
   board <- board_labkey_test()
 
@@ -108,5 +121,3 @@ test_that("Delete pin", {
 
   expect_false("mtcars" %in% pins_avail)
 })
-
-# TODO delete pin version

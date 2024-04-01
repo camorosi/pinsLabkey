@@ -164,12 +164,8 @@ pin_meta.pins_board_labkey <- function(board, name, version = NULL, ...) {
   path_version <- fs::path(board$cache, name, version)
   fs::dir_create(path_version)
 
-  Rlabkey::labkey.webdav.get(
-    baseUrl = board$base_url,
-    folderPath = board$folder,
-    remoteFilePath = fs::path(board$subdir, metadata_key),
-    localFilePath = fs::path(board$cache, metadata_key)
-  )
+  labkey_download(board, metadata_key)
+
   pins:::local_meta(
     pins:::read_meta(fs::path(board$cache, name, version)),
     name = name,
@@ -182,17 +178,12 @@ pin_meta.pins_board_labkey <- function(board, name, version = NULL, ...) {
 #' @export
 pin_fetch.pins_board_labkey <- function(board, name, version = NULL, ...) {
   meta <- pins::pin_meta(board, name, version = version)
-  pins:::cache_touch(board, meta) ## TODO this changes to read only!
-  fs::file_chmod(fs::path(meta$local$dir, "data.txt"), "u+w")
+  pins:::cache_touch(board, meta) ## note this changes to read only, which is expected
 
   for (file in meta$file) {
     key <- fs::path(name, meta$local$version, file)
-    Rlabkey::labkey.webdav.get(
-      baseUrl = board$base_url,
-      folderPath = board$folder,
-      remoteFilePath = fs::path(board$subdir, key),
-      localFilePath = fs::path(board$cache, key)
-    )
+    labkey_download(board, key)
+
   }
 
   meta
@@ -228,6 +219,20 @@ pin_store.pins_board_labkey <- function(board, name, paths, metadata,
   }
 
   name
+}
+
+labkey_download <- function(board, key) {
+  path <- fs::path(board$cache, key)
+  if (!fs::file_exists(path)) {
+    Rlabkey::labkey.webdav.get(
+      baseUrl = board$base_url,
+      folderPath = board$folder,
+      remoteFilePath = fs::path(board$subdir, key),
+      localFilePath = path
+    )
+    fs::file_chmod(path, "u=r")
+  }
+  path
 }
 
 #' @export
