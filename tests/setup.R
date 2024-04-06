@@ -1,6 +1,4 @@
-options(pins.verbose = FALSE)
+options(pins.verbose = FALSE) # not sure if this is doing anything
 options(pins.quiet = TRUE)
 
-# delete cache to be safe?
-# pins::cache_prune(days = 30)
 # TODO for set up/tear down make sure to delete everything on remote labkey folder?

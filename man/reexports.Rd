@@ -7,6 +7,7 @@
 \alias{pin_write}
 \alias{pin_versions}
 \alias{pin_list}
+\alias{pin_exists}
 \alias{pin_version_delete}
 \alias{pin_delete}
 \title{Objects exported from other packages}
@@ -16,6 +17,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{pins}{\code{\link[pins]{pin_delete}}, \code{\link[pins]{pin_list}}, \code{\link[pins]{pin_read}}, \code{\link[pins:pin_versions]{pin_version_delete}}, \code{\link[pins]{pin_versions}}, \code{\link[pins:pin_read]{pin_write}}}
+  \item{pins}{\code{\link[pins]{pin_delete}}, \code{\link[pins]{pin_exists}}, \code{\link[pins]{pin_list}}, \code{\link[pins]{pin_read}}, \code{\link[pins:pin_versions]{pin_version_delete}}, \code{\link[pins]{pin_versions}}, \code{\link[pins:pin_read]{pin_write}}}
 }}
 

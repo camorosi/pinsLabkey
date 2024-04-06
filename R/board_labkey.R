@@ -44,6 +44,7 @@ board_labkey <- function(
 
   # Make labkey directory if does not exist
   if (!dirExists) {
+    labkey_check_permissions(folder = folder, subdir = "", permission_to_check = "canUpload") # need to check parent if dir doesn't exist
     Rlabkey::labkey.webdav.mkDir(folderPath = folder, remoteFilePath = subdir)
   }
 
@@ -102,6 +103,7 @@ pin_exists.pins_board_labkey <- function(board, name, ...) {
 pin_delete.pins_board_labkey <- function(board, names, ...) {
   for (name in names) {
     pins:::check_pin_exists(board, name)
+    labkey_check_permissions(folder = board$folder, subdir = board$subdir, permission_to_check = "canDelete")
     Rlabkey::labkey.webdav.delete(
       baseUrl = board$base_url,
       folderPath = board$folder,
@@ -116,6 +118,7 @@ pin_delete.pins_board_labkey <- function(board, names, ...) {
 #' @importFrom pins pin_version_delete
 #' @export
 pin_version_delete.pins_board_labkey <- function(board, name, version, ...) {
+  labkey_check_permissions(folder = board$folder, subdir = board$subdir, permission_to_check = "canDelete")
   Rlabkey::labkey.webdav.delete(
     baseUrl = board$base_url,
     folderPath = board$folder,
@@ -203,6 +206,7 @@ pin_store.pins_board_labkey <- function(board, name, paths, metadata,
   yaml_path <- fs::path_temp("data.txt")
   yaml::write_yaml(x = metadata, file = yaml_path)
   withr::defer(fs::file_delete(yaml_path))
+  labkey_check_permissions(folder = board$folder, subdir = board$subdir, permission_to_check = "canUpload")
   Rlabkey::labkey.webdav.put(
     localFile = yaml_path,
     baseUrl = board$base_url,
@@ -235,6 +239,26 @@ labkey_download <- function(board, key) {
   path
 }
 
+labkey_check_permissions <- function(folder, subdir, permission_to_check = "canUpload") {
+  checks <- match.arg(arg = permission_to_check,
+                      choices = c("canRead", "canUpload", "canEdit", "canRename",
+                                  "canDelete"),
+                      several.ok = F)
+  resp <- Rlabkey::labkey.webdav.listDir(folderPath = folder,
+                                         remoteFilePath = subdir,
+                                         fileSet = "@files",
+                                         haltOnError = F)
+  if (! "permissions" %in% names(resp)) {
+    stop("Unable to list permissions for LabKey board. Check credentials and try again. ")
+  }
+  if (resp$permissions[[checks]]) {
+    return(TRUE)
+  } else {
+    stop(paste("Invalid LabKey permissions: need", tolower(gsub("can", "", permission_to_check)),
+               "permissions for this action. Check credentials and try again."))
+  }
+}
+
 #' @export
 pins::pin_read
 
@@ -246,6 +270,9 @@ pins::pin_versions
 
 #' @export
 pins::pin_list
+
+#' @export
+pins::pin_exists
 
 #' @export
 pins::pin_version_delete
