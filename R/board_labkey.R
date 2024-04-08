@@ -249,13 +249,16 @@ labkey_check_permissions <- function(folder, subdir, permission_to_check = "canU
                                          fileSet = "@files",
                                          haltOnError = F)
   if (! "permissions" %in% names(resp)) {
-    stop("Unable to list permissions for LabKey board. Check credentials and try again. ")
+    warning("Unable to list permissions for LabKey board. Check credentials using labkey.whoAmI() and try again. ",
+            call. = F)
   }
   if (resp$permissions[[checks]]) {
     return(TRUE)
   } else {
-    stop(paste("Invalid LabKey permissions: need", tolower(gsub("can", "", permission_to_check)),
-               "permissions for this action. Check credentials and try again."))
+    warning(paste("Invalid LabKey permissions: missing", tolower(gsub("can", "", permission_to_check)),
+                  "permissions for this action. Check credentials using labkey.whoAmI() and try again."),
+            call. = F
+         )
   }
 }
 
