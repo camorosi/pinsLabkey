@@ -30,7 +30,7 @@ board <- board_labkey(
   board_alias = "pins-test", # becomes 'labkey-pins-test in cache
   base_url = "https://learn.labkey.com/",
   folder = "LabKey_Board/",
-  subdir = "pins"
+  subdir = "pins_test"
 )
 ```
 
@@ -60,13 +60,18 @@ You can also list the available pins on the LabKey board:
 board %>% pin_list()
 ```
 
-Pins can be deleted by name (all versions deleted) or by version. 
+Pins can be deleted by version: 
 
 ```{r}
 versions <- pin_versions(board, name = "mtcars")
 board %>% pin_version_delete(name = "mtcars", version = versions$version[1])
 board %>% pin_versions(name = "mtcars")
-# board %>% pin_read(name = "mtcars") # this is erroring out
+```
+
+Or by name to delete all versions of a pin: 
+
+```{r}
+board %>% pin_read(name = "mtcars")
 board %>% pin_delete(name = "mtcars")
 board %>% pin_list()
 ```
