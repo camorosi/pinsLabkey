@@ -46,12 +46,13 @@ And retrieve pinned data from a LabKey board with `pin_read()`:
 board %>% pin_read("mtcars")
 ```
 
-If there are multiple versions of the same pin, these can be retrieved by version or hash. 
+If there are multiple versions of the same pin, these can be retrieved by version (or hash for the latest version)
 
 ```{r}
 board %>% pin_write(head(mtcars), "mtcars")
-board %>% pin_versions(name = "mtcars")
-board %>% pin_read("mtcars", hash = "a800d")
+versions <- board %>% pin_versions(name = "mtcars")
+versions
+board %>% pin_read("mtcars", version = versions$version[1])
 ```
 
 You can also list the available pins on the LabKey board:
@@ -63,7 +64,6 @@ board %>% pin_list()
 Pins can be deleted by version: 
 
 ```{r}
-versions <- pin_versions(board, name = "mtcars")
 board %>% pin_version_delete(name = "mtcars", version = versions$version[1])
 board %>% pin_versions(name = "mtcars")
 ```
