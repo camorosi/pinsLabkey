@@ -34,25 +34,36 @@ board <- board_labkey(
 )
 ```
 
-Pin data to a LabKey board using `pin_write()`: 
+Pin data to a LabKey board using `pin_write()`. In this vignette I'll a random pin name but you can name your
+pin "mtcars" or whatever you prefer: 
+
+```{r, include=FALSE}
+# taken from https://github.com/rstudio/pins-r/blob/main/R/testthat.R testing framework
+random_pin_name <- function() {
+  rand <- sample(c(letters, LETTERS, 0:9), 10, replace = TRUE)
+  paste0("mtcars-", paste(rand, collapse = ""))
+}
+
+pin_name <- random_pin_name()
+```
 
 ```{r}
-board %>% pins::pin_write(mtcars, "mtcars")
+board %>% pins::pin_write(mtcars, pin_name)
 ```
 
 And retrieve pinned data from a LabKey board with `pin_read()`: 
 
 ```{r}
-board %>% pin_read("mtcars")
+board %>% pin_read(pin_name)
 ```
 
 If there are multiple versions of the same pin, these can be retrieved by version (or hash for the latest version)
 
 ```{r}
-board %>% pin_write(head(mtcars), "mtcars")
-versions <- board %>% pin_versions(name = "mtcars")
+board %>% pin_write(head(mtcars), pin_name)
+versions <- board %>% pin_versions(name = pin_name)
 versions
-board %>% pin_read("mtcars", version = versions$version[1])
+board %>% pin_read(pin_name, version = versions$version[1])
 ```
 
 You can also list the available pins on the LabKey board:
@@ -64,13 +75,13 @@ board %>% pin_list()
 Pins can be deleted by version: 
 
 ```{r}
-board %>% pin_version_delete(name = "mtcars", version = versions$version[1])
-board %>% pin_versions(name = "mtcars")
+board %>% pin_version_delete(name = pin_name, version = versions$version[1])
+board %>% pin_versions(name = pin_name)
 ```
 
 Or by name to delete all versions of a pin: 
 
 ```{r}
-board %>% pin_delete(name = "mtcars")
+board %>% pin_delete(name = pin_name)
 board %>% pin_list()
 ```
