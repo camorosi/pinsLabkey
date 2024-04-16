@@ -16,14 +16,16 @@ test_that("Create a labkey board with bad credentials", {
   httr::handle_reset(Rlabkey::labkey.getBaseUrl())
   Rlabkey::labkey.setDefaults() # should unset defaults
 
-  expect_error(
-    board_labkey(
-      board_alias = "pins-test",
-      base_url = "https://learn.labkey.com/",
-      folder = "LabKey_Board/",
-      subdir = "new_test_folder",
-      api_key = "123456"
-      ),
+  suppressWarnings(
+    expect_error(
+      board_labkey(
+        board_alias = "pins-test",
+        base_url = "https://learn.labkey.com/",
+        folder = "LabKey_Board/",
+        subdir = "new_test_folder",
+        api_key = "123456"
+        ),
     regexp = "HTTP request was unsuccessful. Status code = 401"
+    )
   )
 })
