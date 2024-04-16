@@ -98,7 +98,7 @@ test_that("List available pins", {
 
   pins_avail <- board %>% pin_list()
 
-  expect_equal(pins_avail, pin_name)
+  expect_true(pin_name %in% pins_avail) # due to concurrency, can expect more pins occasionally
 })
 
 test_that("Try to delete pin that doesn't exits", {
