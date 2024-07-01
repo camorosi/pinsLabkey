@@ -12,9 +12,10 @@ test_that("Create a labkey board", {
 })
 
 test_that("Create a labkey board with bad credentials", {
-  # TODO issues with labkey remembering credentials. have workaround below
-  httr::handle_reset(Rlabkey::labkey.getBaseUrl())
-  Rlabkey::labkey.setDefaults() # should unset defaults
+  # Rlabkey v3.2.1 and higher fixes issues of remembered credentials
+  # Previously needed to reset httr handle
+  # httr::handle_reset(Rlabkey::labkey.getBaseUrl())
+  # Rlabkey::labkey.setDefaults() # should unset defaults
 
   suppressWarnings(
     expect_error(

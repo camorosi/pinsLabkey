@@ -1,15 +1,17 @@
 Package: pinsLabkey
-Title: Extends Pins for Labkey Boards
+Title: Extend Pins Package for 'LabKey' Boards
 Version: 0.1.0
 Authors@R: 
     person("Clara", "Amorosi", role = c("aut", "cre"),
            email = "clara.amorosi@bms.com",
            comment = c(ORCID = "0000-0002-0730-2576"))
-Description: Package to extend R pins for LabKey boards. Wrapper around pins package to allow reading, writing and more of pins on LabKey servers.
+Description: Read and write datasets and other R objects to LabKey servers <https://www.labkey.com/>. 
+    Extends pins using 'Rlabkey' to enable pinning of data to LabKey "boards", with 
+    flexibility to specify which LabKey server and folder to pin to. 
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Imports: 
     magrittr,
     pins (>= 1.2.0),

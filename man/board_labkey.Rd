@@ -17,17 +17,17 @@ board_labkey(
 \arguments{
 \item{board_alias}{alias of the board to be used for cache storage}
 
-\item{base_url}{Url of Labkey server}
+\item{base_url}{baseUrl of Labkey server}
 
-\item{folder}{Folder within this server that this board will occupy}
+\item{folder}{folderPath; folder path within the LabKey server to read/write pins}
 
-\item{subdir}{Subdirectory on LabKey server where pin should be stored (default "pins")}
+\item{subdir}{subdirectory within the LabKey folder (aka remoteFilePath) where pin should be stored (default "pins")}
 
 \item{versioned}{T or F whether to version the pin (default T)}
 
 \item{api_key}{API key to use for LabKey authentication. If not specified, will use \code{LABKEY_API_KEY}}
 
-\item{cache}{where to store board cache (default NULL will use default pins cache location)}
+\item{cache}{where to store board cache (if not specified will use default pins cache location)}
 }
 \description{
 Pin data to a folder on a LabKey server

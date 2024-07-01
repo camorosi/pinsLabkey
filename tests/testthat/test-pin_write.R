@@ -5,7 +5,6 @@ random_pin_name <- function() {
 }
 
 pin_name <- random_pin_name()
-# TODO for set up/tear down make sure to delete everything on remote labkey folder?
 
 # Helper board function
 board_labkey_test <- function() {
@@ -28,7 +27,6 @@ test_that("Write a pin on a labkey board", {
   expect_equal(resp, pin_name)
 })
 
-# TODO this is failing
 test_that("Write pin with same hash", {
   withr::local_options(pins.quiet = FALSE)
 

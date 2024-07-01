@@ -5,12 +5,12 @@
 #' `board_labkey()` is powered by the Rlabkey package <https://github.com/cran/Rlabkey>
 #'
 #' @param board_alias alias of the board to be used for cache storage
-#' @param base_url Url of Labkey server
-#' @param folder Folder within this server that this board will occupy
-#' @param subdir Subdirectory on LabKey server where pin should be stored (default "pins")
+#' @param base_url baseUrl of Labkey server
+#' @param folder folderPath; folder path within the LabKey server to read/write pins
+#' @param subdir subdirectory within the LabKey folder (aka remoteFilePath) where pin should be stored (default "pins")
 #' @param versioned T or F whether to version the pin (default T)
 #' @param api_key API key to use for LabKey authentication. If not specified, will use `LABKEY_API_KEY`
-#' @param cache where to store board cache (default NULL will use default pins cache location)
+#' @param cache where to store board cache (if not specified will use default pins cache location)
 #' @export
 #' @examples
 #' \dontrun{
