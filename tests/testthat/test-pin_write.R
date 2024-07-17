@@ -11,10 +11,10 @@ board_labkey_test <- function() {
   # uses LABKEY_API_KEY env var
 
   board_labkey(
-    board_alias = "pins-test", # becomes 'labkey-pins-test in cache
     base_url = "https://learn.labkey.com/",
     folder = "LabKey_Board/",
-    subdir = "pins"
+    subdir = "pins",
+    cache_alias = "learn-testing-board"
   )
 }
 
@@ -22,7 +22,7 @@ test_that("Write a pin on a labkey board", {
 
   board <- board_labkey_test()
 
-  # this is returning messages even though pins.quiet is TRUE
+  # TODO this is returning messages even though pins.quiet is TRUE
   resp <- board %>% pin_write(mtcars, pin_name, type = "rds")
   expect_equal(resp, pin_name)
 })

@@ -5,29 +5,29 @@
 \title{Use a LabKey folder as a board}
 \usage{
 board_labkey(
-  board_alias = NULL,
   base_url,
   folder,
   subdir = "pins",
   versioned = TRUE,
   api_key = Sys.getenv("LABKEY_API_KEY"),
-  cache = NULL
+  cache_alias = NULL
 )
 }
 \arguments{
-\item{board_alias}{alias of the board to be used for cache storage}
+\item{base_url}{The baseUrl of the Labkey server}
 
-\item{base_url}{baseUrl of Labkey server}
+\item{folder}{The folder path (aka folderPath) within the LabKey server to read/write pins}
 
-\item{folder}{folderPath; folder path within the LabKey server to read/write pins}
+\item{subdir}{The subdirectory within the LabKey folder (aka remoteFilePath) where pin should be stored (default "pins")}
 
-\item{subdir}{subdirectory within the LabKey folder (aka remoteFilePath) where pin should be stored (default "pins")}
-
-\item{versioned}{T or F whether to version the pin (default T)}
+\item{versioned}{Boolean; whether to version the pin (default TRUE)}
 
 \item{api_key}{API key to use for LabKey authentication. If not specified, will use \code{LABKEY_API_KEY}}
 
-\item{cache}{where to store board cache (if not specified will use default pins cache location)}
+\item{cache_alias}{Alias of the board to use in cache (if not specified will use default pins cache location)}
+}
+\value{
+A board object of class "pins_board_labkey"
 }
 \description{
 Pin data to a folder on a LabKey server
@@ -37,7 +37,10 @@ Pin data to a folder on a LabKey server
 }
 \examples{
 \dontrun{
-board <- board_labkey("pins-test-labkey")
+board <- board_labkey(
+  base_url = "https://learn.labkey.com/",
+  folder = "LabKey_Board/"
+)
 board \%>\% pin_write(mtcars)
 board \%>\% pin_read("mtcars")
 }
