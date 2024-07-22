@@ -29,8 +29,7 @@ library(pinsLabkey)
 board <- board_labkey(
   base_url = "https://learn.labkey.com/",
   folder = "LabKey_Board/",
-  subdir = "pins_test",
-  cache_alias = "learn-testing-board" # uses "labkey-learn-testing-board" for cache folder in tmp directory
+  subdir = "pins_test"
 )
 ```
 

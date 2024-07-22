@@ -48,13 +48,14 @@ board_labkey <- function(
     Rlabkey::labkey.webdav.mkDir(folderPath = folder, remoteFilePath = subdir)
   }
 
-  # Use folder name is cache alias not provided
+  # Use domain and folder name is cache alias not provided
   if (is.null(cache_alias)) {
-    folder_cleaned <- gsub(pattern = "^-|-$", "", gsub(pattern = " |/", replacement = "-", x = folder))
-    cache <- pins::board_cache_path(paste0("labkey-", folder_cleaned))
+    # TODO include subdir as well?
+    domain <- strsplit(gsub("http://|https://|www\\.", "", base_url), "/")[[c(1,1)]]
+    folder_cleaned <- paste0(domain, "-", gsub(" ", "-", basename(folder)))
+    cache <- pins::board_cache_path(folder_cleaned)
   } else {
-    # TODO check for whitespace or other characters here?
-    cache <- pins::board_cache_path(paste0("labkey-", cache_alias))
+    cache <- pins::board_cache_path(cache_alias)
   }
   pins:::new_board_v1(
     board = "pins_board_labkey",

@@ -13,8 +13,7 @@ board_labkey_test <- function() {
   board_labkey(
     base_url = "https://learn.labkey.com/",
     folder = "LabKey_Board/",
-    subdir = "pins",
-    cache_alias = "learn-testing-board"
+    subdir = "pins"
   )
 }
 
@@ -23,7 +22,8 @@ test_that("Write a pin on a labkey board", {
   board <- board_labkey_test()
 
   # TODO this is returning messages even though pins.quiet is TRUE
-  resp <- board %>% pin_write(mtcars, pin_name, type = "rds")
+  resp <- suppressMessages(board %>%
+                             pin_write(mtcars, pin_name, type = "rds"))
   expect_equal(resp, pin_name)
 })
 
