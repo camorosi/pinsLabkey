@@ -130,3 +130,20 @@ test_that("Delete pin", {
 
   expect_false(pin_name %in% pins_avail)
 })
+
+test_that("Empty pin folder doesn't count as pin existing", {
+
+  board <- board_labkey_test()
+  another_pin_name <- random_pin_name()
+
+  # create an empty pin folder even though no pin versions exist
+  Rlabkey::labkey.webdav.mkDir(baseUrl = "https://learn.labkey.com/",
+                               folderPath = "LabKey_Board/",
+                               remoteFilePath = fs::path("pins", another_pin_name))
+
+  expect_false(pin_exists(board, another_pin_name))
+
+  Rlabkey::labkey.webdav.delete(baseUrl = "https://learn.labkey.com/",
+                               folderPath = "LabKey_Board/",
+                               remoteFilePath = fs::path("pins", another_pin_name))
+})

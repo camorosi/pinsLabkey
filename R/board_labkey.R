@@ -88,11 +88,22 @@ pin_list.pins_board_labkey <- function(board, ...) {
 #' @importFrom pins pin_exists
 #' @export
 pin_exists.pins_board_labkey <- function(board, name, ...) {
-  Rlabkey::labkey.webdav.pathExists(
+  dir_exists <- Rlabkey::labkey.webdav.pathExists(
     baseUrl = board$base_url,
     folderPath = board$folder,
     remoteFilePath = fs::path(board$subdir, name)
   )
+  # if the directory exists, make sure there's files within it
+  if (dir_exists) {
+    pin_files <- Rlabkey::labkey.webdav.listDir(
+      baseUrl = board$base_url,
+      folderPath = board$folder,
+      remoteFilePath = fs::path(board$subdir, name)
+    )
+    length(pin_files$files) > 0
+  } else {
+    return(FALSE)
+  }
 }
 
 #' @importFrom pins pin_delete
