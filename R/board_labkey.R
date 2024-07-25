@@ -1,35 +1,35 @@
-#' Use a LabKey folder as a board
+#' @title Use a LabKey folder as a board
 #'
-#' Pin data to a folder on a LabKey server
+#' @description Pin data to a folder on a LabKey server
 #'
-#' `board_labkey()` is powered by the Rlabkey package <https://github.com/cran/Rlabkey>
+#' @details `board_labkey()` is powered by the Rlabkey package <https://github.com/cran/Rlabkey>
 #'
-#' @param board_alias alias of the board to be used for cache storage
-#' @param base_url Url of Labkey server
-#' @param folder Folder within this server that this board will occupy
-#' @param subdir Subdirectory on LabKey server where pin should be stored (default "pins")
-#' @param versioned T or F whether to version the pin (default T)
+#' @param base_url The baseUrl of the Labkey server
+#' @param folder The folder path (aka folderPath) within the LabKey server to read/write pins
+#' @param subdir The subdirectory within the LabKey folder (aka remoteFilePath) where pin should be stored (default "pins")
+#' @param versioned Boolean; whether to version the pin (default TRUE)
 #' @param api_key API key to use for LabKey authentication. If not specified, will use `LABKEY_API_KEY`
-#' @param cache where to store board cache (default NULL will use default pins cache location)
-#' @export
+#' @param cache_alias Alias of the board to use in cache (if not specified will use default pins cache location)
+#'
+#' @return A board object of class "pins_board_labkey"
+#'
 #' @examples
 #' \dontrun{
-#' board <- board_labkey("pins-test-labkey")
+#' board <- board_labkey(
+#'   base_url = "https://learn.labkey.com/",
+#'   folder = "LabKey_Board/"
+#' )
 #' board %>% pin_write(mtcars)
 #' board %>% pin_read("mtcars")
 #' }
+#' @export
 board_labkey <- function(
-    board_alias = NULL,
     base_url,
     folder,
     subdir = "pins",
     versioned = TRUE,
     api_key = Sys.getenv("LABKEY_API_KEY"),
-    cache = NULL) {
-  # nonrestricted boards may not require a key
-  # if (nchar(api_key) == 0) {
-  #   stop("The 'labkey' board requires a 'api_key' parameter.")
-  # }
+    cache_alias = NULL) {
   if (nchar(base_url) == 0) {
     stop("The 'labkey' board requires a 'base_url' parameter for the LabKey server.")
   }
@@ -48,12 +48,14 @@ board_labkey <- function(
     Rlabkey::labkey.webdav.mkDir(folderPath = folder, remoteFilePath = subdir)
   }
 
-  # Use cache if provided, otherwise use alias or folder name
-  if (is.null(cache) & is.null(board_alias)) {
-    folder_cleaned <- gsub(pattern = "^-|-$", "", gsub(pattern = "/", replacement = "-", x = folder))
-    cache <- pins::board_cache_path(paste0("labkey-", folder_cleaned))
-  } else if (is.null(cache) & !is.null(board_alias)) {
-    cache <- pins::board_cache_path(paste0("labkey-", board_alias))
+  # Use domain and folder name is cache alias not provided
+  if (is.null(cache_alias)) {
+    # TODO include subdir as well?
+    domain <- strsplit(gsub("http://|https://|www\\.", "", base_url), "/")[[c(1,1)]]
+    folder_cleaned <- paste0(domain, "-", gsub(" ", "-", basename(folder)))
+    cache <- pins::board_cache_path(folder_cleaned)
+  } else {
+    cache <- pins::board_cache_path(cache_alias)
   }
   pins:::new_board_v1(
     board = "pins_board_labkey",
@@ -66,11 +68,6 @@ board_labkey <- function(
     versioned = versioned
   )
 }
-
-
-# required_pkgs.pins_board_labkey <- function(x, ...) {
-#   "Rlabkey"
-# }
 
 #' @importFrom pins pin_list
 #' @importFrom purrr map_chr
@@ -91,11 +88,22 @@ pin_list.pins_board_labkey <- function(board, ...) {
 #' @importFrom pins pin_exists
 #' @export
 pin_exists.pins_board_labkey <- function(board, name, ...) {
-  Rlabkey::labkey.webdav.pathExists(
+  dir_exists <- Rlabkey::labkey.webdav.pathExists(
     baseUrl = board$base_url,
     folderPath = board$folder,
     remoteFilePath = fs::path(board$subdir, name)
   )
+  # if the directory exists, make sure there's files within it
+  if (dir_exists) {
+    pin_files <- Rlabkey::labkey.webdav.listDir(
+      baseUrl = board$base_url,
+      folderPath = board$folder,
+      remoteFilePath = fs::path(board$subdir, name)
+    )
+    length(pin_files$files) > 0
+  } else {
+    return(FALSE)
+  }
 }
 
 #' @importFrom pins pin_delete

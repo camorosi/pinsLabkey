@@ -5,14 +5,12 @@ random_pin_name <- function() {
 }
 
 pin_name <- random_pin_name()
-# TODO for set up/tear down make sure to delete everything on remote labkey folder?
 
 # Helper board function
 board_labkey_test <- function() {
   # uses LABKEY_API_KEY env var
 
   board_labkey(
-    board_alias = "pins-test", # becomes 'labkey-pins-test in cache
     base_url = "https://learn.labkey.com/",
     folder = "LabKey_Board/",
     subdir = "pins"
@@ -23,12 +21,12 @@ test_that("Write a pin on a labkey board", {
 
   board <- board_labkey_test()
 
-  # this is returning messages even though pins.quiet is TRUE
-  resp <- board %>% pin_write(mtcars, pin_name, type = "rds")
+  # TODO this is returning messages even though pins.quiet is TRUE
+  resp <- suppressMessages(board %>%
+                             pin_write(mtcars, pin_name, type = "rds"))
   expect_equal(resp, pin_name)
 })
 
-# TODO this is failing
 test_that("Write pin with same hash", {
   withr::local_options(pins.quiet = FALSE)
 
@@ -131,4 +129,21 @@ test_that("Delete pin", {
   pins_avail <- board %>% pin_list()
 
   expect_false(pin_name %in% pins_avail)
+})
+
+test_that("Empty pin folder doesn't count as pin existing", {
+
+  board <- board_labkey_test()
+  another_pin_name <- random_pin_name()
+
+  # create an empty pin folder even though no pin versions exist
+  Rlabkey::labkey.webdav.mkDir(baseUrl = "https://learn.labkey.com/",
+                               folderPath = "LabKey_Board/",
+                               remoteFilePath = fs::path("pins", another_pin_name))
+
+  expect_false(pin_exists(board, another_pin_name))
+
+  Rlabkey::labkey.webdav.delete(baseUrl = "https://learn.labkey.com/",
+                               folderPath = "LabKey_Board/",
+                               remoteFilePath = fs::path("pins", another_pin_name))
 })

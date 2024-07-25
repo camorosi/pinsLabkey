@@ -4,9 +4,9 @@
 \name{pinsLabkey-package}
 \alias{pinsLabkey}
 \alias{pinsLabkey-package}
-\title{pinsLabkey: Extends Pins for Labkey Boards}
+\title{pinsLabkey: Extend Pins Package for 'LabKey' Boards}
 \description{
-Package to extend R pins for LabKey boards. Wrapper around pins package to allow reading, writing and more of pins on LabKey servers.
+Read and write datasets and other R objects to LabKey servers \url{https://www.labkey.com/}. Extends pins using 'Rlabkey' to enable pinning of data to LabKey "boards", with flexibility to specify which LabKey server and folder to pin to.
 }
 \author{
 \strong{Maintainer}: Clara Amorosi \email{clara.amorosi@bms.com} (\href{https://orcid.org/0000-0002-0730-2576}{ORCID})

@@ -27,7 +27,6 @@ library(pinsLabkey)
 
 # create a board object
 board <- board_labkey(
-  board_alias = "learn-testing", # becomes 'labkey-learn-testing' in cache
   base_url = "https://learn.labkey.com/",
   folder = "LabKey_Board/",
   subdir = "pins_test"
