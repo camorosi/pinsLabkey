@@ -1,39 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/404.html</loc>
-  </url>
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/articles/pinsLabkey.html</loc>
-  </url>
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/index.html</loc>
-  </url>
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/reference/board_labkey.html</loc>
-  </url>
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/reference/pinsLabkey-package.html</loc>
-  </url>
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>https://camorosi.github.io/pinsLabkey/reference/reexports.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://camorosi.github.io/pinsLabkey/404.html</loc></url>
+<url><loc>https://camorosi.github.io/pinsLabkey/LICENSE.html</loc></url>
+<url><loc>https://camorosi.github.io/pinsLabkey/articles/index.html</loc></url>
+<url><loc>https://camorosi.github.io/pinsLabkey/articles/pinsLabkey.html</loc></url>
+<url><loc>https://camorosi.github.io/pinsLabkey/authors.html</loc></url>
+<url><loc>https://camorosi.github.io/pinsLabkey/index.html</loc></url>
+<url><loc>https://camorosi.github.io/pinsLabkey/news/index.html</loc></url>
+<url><loc>https://camorosi.github.io/pinsLabkey/reference/board_labkey.html</loc></url>
+<url><loc>https://camorosi.github.io/pinsLabkey/reference/index.html</loc></url>
+<url><loc>https://camorosi.github.io/pinsLabkey/reference/pinsLabkey-package.html</loc></url>
+<url><loc>https://camorosi.github.io/pinsLabkey/reference/pipe.html</loc></url>
+<url><loc>https://camorosi.github.io/pinsLabkey/reference/reexports.html</loc></url>
 </urlset>
+
