@@ -39,7 +39,7 @@ test_that("Create a labkey board with bad credentials", {
         subdir = "new_test_folder",
         api_key = "123456"
         ),
-    regexp = "HTTP request was unsuccessful. Status code = 401"
+    regexp = "Unable to list permissions for LabKey board."
     )
   )
 })
