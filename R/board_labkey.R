@@ -268,7 +268,7 @@ labkey_check_permissions <- function(folder, subdir, permission_to_check = "canU
         warning(
           paste(
             "Invalid LabKey permissions: missing", tolower(gsub("can", "", permission_to_check)),
-            "permissions for this action. Check credentials using labkey.whoAmI() and try again."
+            "permissions for this action. Check credentials using Rlabkey::labkey.whoAmI() and try again."
           ),
           call. = F
         )
@@ -277,7 +277,7 @@ labkey_check_permissions <- function(folder, subdir, permission_to_check = "canU
     # Still throw an error but add a more helpful message
     error = function(cond) {
       stop(paste(conditionMessage(cond),
-                 "Unable to list permissions for LabKey board. Check credentials using labkey.whoAmI() and try again. ",
+                 "Unable to list permissions for LabKey board. Check credentials using Rlabkey::labkey.whoAmI() and try again. ",
                  sep = "\n"),
         call. = F
       )
