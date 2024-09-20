@@ -51,7 +51,7 @@ board_labkey <- function(
   # Use domain and folder name is cache alias not provided
   if (is.null(cache_alias)) {
     # TODO include subdir as well?
-    domain <- strsplit(gsub("http://|https://|www\\.", "", base_url), "/")[[c(1,1)]]
+    domain <- strsplit(gsub("http://|https://|www\\.", "", base_url), "/")[[c(1, 1)]]
     folder_cleaned <- paste0(domain, "-", gsub(" ", "-", basename(folder)))
     cache <- pins::board_cache_path(folder_cleaned)
   } else {
@@ -194,7 +194,6 @@ pin_fetch.pins_board_labkey <- function(board, name, version = NULL, ...) {
   for (file in meta$file) {
     key <- fs::path(name, meta$local$version, file)
     labkey_download(board, key)
-
   }
 
   meta
@@ -248,26 +247,43 @@ labkey_download <- function(board, key) {
 }
 
 labkey_check_permissions <- function(folder, subdir, permission_to_check = "canUpload") {
-  checks <- match.arg(arg = permission_to_check,
-                      choices = c("canRead", "canUpload", "canEdit", "canRename",
-                                  "canDelete"),
-                      several.ok = F)
-  resp <- Rlabkey::labkey.webdav.listDir(folderPath = folder,
-                                         remoteFilePath = subdir,
-                                         fileSet = "@files",
-                                         haltOnError = F)
-  if (! "permissions" %in% names(resp)) {
-    warning("Unable to list permissions for LabKey board. Check credentials using labkey.whoAmI() and try again. ",
-            call. = F)
-  }
-  if (resp$permissions[[checks]]) {
-    return(TRUE)
-  } else {
-    warning(paste("Invalid LabKey permissions: missing", tolower(gsub("can", "", permission_to_check)),
-                  "permissions for this action. Check credentials using labkey.whoAmI() and try again."),
-            call. = F
-         )
-  }
+  checks <- match.arg(
+    arg = permission_to_check,
+    choices = c(
+      "canRead", "canUpload", "canEdit", "canRename",
+      "canDelete"
+    ),
+    several.ok = F
+  )
+  tryCatch(
+    {
+      resp <- Rlabkey::labkey.webdav.listDir(
+        folderPath = folder,
+        remoteFilePath = subdir,
+        fileSet = "@files"
+      )
+      if (resp$permissions[[checks]]) {
+        return(TRUE)
+      } else {
+        warning(
+          paste(
+            "Invalid LabKey permissions: missing", tolower(gsub("can", "", permission_to_check)),
+            "permissions for this action. Check credentials using Rlabkey::labkey.whoAmI() and try again."
+          ),
+          call. = F
+        )
+      }
+    },
+    # Still throw an error but add a more helpful message
+    error = function(cond) {
+      stop(paste(conditionMessage(cond),
+                 "Unable to list permissions for LabKey board. Check credentials using Rlabkey::labkey.whoAmI() and try again. ",
+                 sep = "\n"),
+        call. = F
+      )
+      return(NA)
+    }
+  )
 }
 
 #' @export
