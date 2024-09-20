@@ -86,7 +86,7 @@ whatever you prefer:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">board</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">pins</span><span class="fu">::</span><span class="fu"><a href="https://pins.rstudio.com/reference/pin_read.html" class="external-link">pin_write</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="va">pin_name</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Guessing `type = 'rds'`</span></span>
-<span><span class="co">#&gt; Creating new version '20240920T160011Z-b9134'</span></span>
+<span><span class="co">#&gt; Creating new version '20240920T162315Z-b9134'</span></span>
 <span><span class="co">#&gt; Writing to pin 'mtcars-SwlKLUUEdL'</span></span></code></pre></div>
 <p>And retrieve pinned data from a LabKey board with
 <code><a href="https://pins.rstudio.com/reference/pin_read.html" class="external-link">pin_read()</a></code>:</p>
@@ -130,15 +130,15 @@ retrieved by version (or hash for the latest version)</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">board</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://pins.rstudio.com/reference/pin_read.html" class="external-link">pin_write</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, <span class="va">pin_name</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Guessing `type = 'rds'`</span></span>
-<span><span class="co">#&gt; Creating new version '20240920T160011Z-f79b9'</span></span>
+<span><span class="co">#&gt; Creating new version '20240920T162317Z-f79b9'</span></span>
 <span><span class="co">#&gt; Writing to pin 'mtcars-SwlKLUUEdL'</span></span>
 <span><span class="va">versions</span> <span class="op">&lt;-</span> <span class="va">board</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://pins.rstudio.com/reference/pin_versions.html" class="external-link">pin_versions</a></span><span class="op">(</span>name <span class="op">=</span> <span class="va">pin_name</span><span class="op">)</span></span>
 <span><span class="va">versions</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span></span>
 <span><span class="co">#&gt;   version                created             hash </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 20240920T160011Z-b9134 2024-09-20 <span style="color: #949494;">16:00:11</span> b9134</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 20240920T160011Z-f79b9 2024-09-20 <span style="color: #949494;">16:00:11</span> f79b9</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 20240920T162315Z-b9134 2024-09-20 <span style="color: #949494;">16:23:15</span> b9134</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 20240920T162317Z-f79b9 2024-09-20 <span style="color: #949494;">16:23:17</span> f79b9</span></span>
 <span><span class="va">board</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://pins.rstudio.com/reference/pin_read.html" class="external-link">pin_read</a></span><span class="op">(</span><span class="va">pin_name</span>, version <span class="op">=</span> <span class="va">versions</span><span class="op">$</span><span class="va">version</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                      mpg cyl  disp  hp drat    wt  qsec vs am gear carb</span></span>
 <span><span class="co">#&gt; Mazda RX4           21.0   6 160.0 110 3.90 2.620 16.46  0  1    4    4</span></span>
@@ -185,7 +185,7 @@ retrieved by version (or hash for the latest version)</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
 <span><span class="co">#&gt;   version                created             hash </span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 20240920T160011Z-f79b9 2024-09-20 <span style="color: #949494;">16:00:11</span> f79b9</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 20240920T162317Z-f79b9 2024-09-20 <span style="color: #949494;">16:23:17</span> f79b9</span></span></code></pre></div>
 <p>Or by name to delete all versions of a pin:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">board</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://pins.rstudio.com/reference/pin_delete.html" class="external-link">pin_delete</a></span><span class="op">(</span>name <span class="op">=</span> <span class="va">pin_name</span><span class="op">)</span></span>
